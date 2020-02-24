@@ -60,14 +60,6 @@ public class ChatHeadService extends Service {
         //Set the close button.
         ImageView closeButton = (ImageView) mChatHeadView.findViewById(R.id.close_btn);
 
-
-//        ImageView avatar = (ImageView) mChatHeadView.findViewById(R.id.chat_head_profile_iv);
-//
-//        Log.i("onCreate", this.uri);
-//        Glide.with(avatar).load(this.uri).into(avatar);
-
-
-
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +74,8 @@ public class ChatHeadService extends Service {
         Glide.with(chatHeadImage)
                 .load(this.uri)
                 .into(chatHeadImage);
+
+        Log.i("RNChatHead", this.uri + "22");
 
         chatHeadImage.setOnTouchListener(new View.OnTouchListener() {
             private int lastAction;

@@ -19,6 +19,7 @@ import android.provider.Settings;
 import android.net.Uri;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 
 public class RNChatHeadModule extends ReactContextBaseJavaModule {
@@ -66,6 +67,8 @@ public class RNChatHeadModule extends ReactContextBaseJavaModule {
         try {
             Intent intent = new Intent(reactContext,ChatHeadService.class);
             intent.putExtra("uri", uri);
+
+            Log.i("RNChatHead", uri);
             reactContext.startService(intent);
             return true;
 

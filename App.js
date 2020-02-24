@@ -20,6 +20,10 @@ import {
   NativeModules
 } from 'react-native';
 
+
+import PushNotification from 'react-native-push-notification';
+
+
 import {
   Header,
   LearnMoreLinks,
@@ -28,16 +32,50 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import BackgroundTask from 'react-native-background-task'
+const {initialize, checkPermission, requestPermission} = NativeModules.RNChatHead;
+BackgroundTask.define(()=>{
+  console.log('Hello from a background task');
+  initialize("https://data-gcdn.basecdn.net/avatar/sys1/95/24/6d/1e/40/414db186f7224645e8d79848ae872ad6/1.longkim_1.jpg");
+  BackgroundTask.finish()
+})
+
+// PushNotification.configure({
+//   onRegister:(token)=>{
+    
+//   },
+//   onNotification:(noti)=>{
+//     console.log('tadat')
+//     alert('ALLLOOOO ');
+//     //initialize("https://data-gcdn.basecdn.net/avatar/sys1/95/24/6d/1e/40/414db186f7224645e8d79848ae872ad6/1.longkim_1.jpg")
+//   },
+//   popInitialNotification:true,
+//   requestPermissions:true
+// })
+
+
+// PushNotification.localNotificationSchedule({
+//   message: "My Notification Message", // (required)
+//   date: new Date(Date.now() + 5 * 1000) ,
+//   repeatType:'minute'
+// })
 
 const showToast = text => ToastAndroid.show(text, 1000)
 
-const {initialize, checkPermission, requestPermission} = NativeModules.RNChatHead;
+
 const App = () => {
   const onRequestPermission = () => requestPermission().then(() => showToast("Permission received")).catch(() => showToast("Failed to get permission"))
   const onInit = () => initialize("https://data-gcdn.basecdn.net/avatar/sys1/95/24/6d/1e/40/414db186f7224645e8d79848ae872ad6/1.longkim_1.jpg")
   useEffect(()=>{
     console.log(NativeModules.RNChatHead);
   })
+
+
+  useEffect(()=>{
+    BackgroundTask.schedule({
+      period: 5, // Aim to run every 30 mins - more conservative on battery
+    })
+  },[])
   return (
     <Fragment>
       <StatusBar barStyle="dark-content" />
