@@ -11,17 +11,22 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import android.os.Bundle;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.content.Intent;
 import android.provider.Settings;
 import android.net.Uri;
 
+import java.util.ArrayList;
+
 
 public class RNChatHeadModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
+
+    private ArrayList<String> notiArray ;
 
 
     public RNChatHeadModule(ReactApplicationContext reactContext) {
@@ -57,13 +62,28 @@ public class RNChatHeadModule extends ReactContextBaseJavaModule {
 
 
     @ReactMethod // Notates a method that should be exposed to React
-    public void initialize(final Promise promise) {
+    public boolean initialize(String uri) {
         try {
-            reactContext.startService(new Intent(reactContext,ChatHeadService.class));
-            promise.resolve("");
+            Intent intent = new Intent(reactContext,ChatHeadService.class);
+            intent.putExtra("uri", uri);
+            reactContext.startService(intent);
+            return true;
+
         } catch (Exception e) {
-            promise.reject("");
+            return  false;
         }
+    }
+
+
+
+    @ReactMethod
+    public void receiveMessage (String id , String photoUrl, String content, Integer notiNumber , String data  ){
+        Intent intent = new Intent(reactContext, ChatHeadService.class);
+        intent.putExtra("uri", photoUrl);
+        intent.putExtra("content", content);
+        intent.putExtra("notiNumber", notiNumber);
+        intent.putExtra("data", data);
+        reactContext.startService(intent);
     }
 
     @ReactMethod // Notates a method that should be exposed to React

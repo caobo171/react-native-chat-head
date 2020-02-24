@@ -34,21 +34,13 @@ const showToast = text => ToastAndroid.show(text, 1000)
 const {initialize, checkPermission, requestPermission} = NativeModules.RNChatHead;
 const App = () => {
   const onRequestPermission = () => requestPermission().then(() => showToast("Permission received")).catch(() => showToast("Failed to get permission"))
-  const onCheckPermissoin = () => checkPermission().then((value) => showToast(`Permission: ${value ? 'Yes' : 'No'}`)).catch(() => showToast("Failed to check"))
-  const onInit = () => initialize().then(() => showToast("Init")).catch(() => showToast("Failed init"));
+  const onInit = () => initialize("https://data-gcdn.basecdn.net/avatar/sys1/95/24/6d/1e/40/414db186f7224645e8d79848ae872ad6/1.longkim_1.jpg")
   useEffect(()=>{
     console.log(NativeModules.RNChatHead);
   })
   return (
     <Fragment>
       <StatusBar barStyle="dark-content" />
-      <View
-        style={{
-          height:200,
-          width:100,
-          backgroundColor: "red"
-        }}
-      ></View>
       <SafeAreaView >
         <ScrollView
         

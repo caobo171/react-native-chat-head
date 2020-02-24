@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,12 +13,17 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.facebook.react.ReactRootView;
+
+
 
 public class ChatHeadService extends Service {
 
     private WindowManager mWindowManager;
     private View mChatHeadView;
+
+    private String uri;
 
 
     public ChatHeadService() {
@@ -29,10 +35,10 @@ public class ChatHeadService extends Service {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        //Inflate the chat head layout we created
-        mChatHeadView = LayoutInflater.from(this).inflate(R.layout.layout_chat_head, null);
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        this.uri = intent.getStringExtra("uri");
+        Log.i("Service", this.uri); mChatHeadView = LayoutInflater.from(this).inflate(R.layout.layout_chat_head, null);
 
         //Add the view to the window.
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
@@ -55,6 +61,12 @@ public class ChatHeadService extends Service {
         ImageView closeButton = (ImageView) mChatHeadView.findViewById(R.id.close_btn);
 
 
+//        ImageView avatar = (ImageView) mChatHeadView.findViewById(R.id.chat_head_profile_iv);
+//
+//        Log.i("onCreate", this.uri);
+//        Glide.with(avatar).load(this.uri).into(avatar);
+
+
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +78,11 @@ public class ChatHeadService extends Service {
 
         //Drag and move chat head using user's touch action.
         final ImageView chatHeadImage = (ImageView) mChatHeadView.findViewById(R.id.chat_head_profile_iv);
+
+        Glide.with(chatHeadImage)
+                .load(this.uri)
+                .into(chatHeadImage);
+
         chatHeadImage.setOnTouchListener(new View.OnTouchListener() {
             private int lastAction;
             private int initialX;
@@ -102,6 +119,7 @@ public class ChatHeadService extends Service {
                             stopSelf();
                         }
                         lastAction = event.getAction();
+
                         return true;
                     case MotionEvent.ACTION_MOVE:
                         //Calculate the X and Y coordinates of the view.
@@ -116,6 +134,16 @@ public class ChatHeadService extends Service {
                 return false;
             }
         });
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onCreate() {
+
+        Log.i("Testtttt", "tessttttt");
+        super.onCreate();
+        //Inflate the chat head layout we created
+
     }
 
     @Override
