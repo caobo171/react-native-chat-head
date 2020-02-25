@@ -1,5 +1,6 @@
 package com.floatingbubble;
 
+import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -22,17 +23,34 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 
-public class RNChatHeadModule extends ReactContextBaseJavaModule {
+public class RNChatHeadModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
     private final ReactApplicationContext reactContext;
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
 
-    private ArrayList<String> notiArray ;
+    private boolean isActive;
+
+    private ArrayList<ChatHeadModel> notiArray ;
 
 
     public RNChatHeadModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
+
+    }
+
+    @Override
+    public void onHostResume() {
+        isActive = true;
+    }
+
+    @Override
+    public void onHostPause() {
+
+    }
+
+    @Override
+    public void onHostDestroy() {
 
     }
 
@@ -86,6 +104,9 @@ public class RNChatHeadModule extends ReactContextBaseJavaModule {
         intent.putExtra("content", content);
         intent.putExtra("notiNumber", notiNumber);
         intent.putExtra("data", data);
+
+        ChatHeadModel chatHeadInstance = new ChatHeadModel(id, photoUrl, content, notiNumber, data);
+        notiArray.add(chatHeadInstance);
         reactContext.startService(intent);
     }
 
